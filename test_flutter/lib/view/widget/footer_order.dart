@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:test_flutter/view/style/theme.dart';
+
+import '../../view_model/item_view_model.dart';
 
 class FooterOrder extends StatelessWidget {
   const FooterOrder({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var jml = 3;
-    var total = 28000;
+    ItemViewModel itemViewModel = context.watch<ItemViewModel>();
+    var jml = itemViewModel.itemCount;
+    var total = itemViewModel.totalAmount;
     return Stack(children: [
       Container(
         height: 200,
