@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:test_flutter/view/style/theme.dart';
-
+import 'package:test_flutter/view/widget/input_voucher.dart';
+import 'package:test_flutter/view/widget/nominal_voucher.dart';
+import 'package:test_flutter/view_model/shop_view_model.dart';
 import '../../view_model/item_view_model.dart';
 
 class FooterOrder extends StatelessWidget {
@@ -11,11 +13,14 @@ class FooterOrder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ItemViewModel itemViewModel = context.watch<ItemViewModel>();
+    ShopViewModel shopViewModel = context.watch<ShopViewModel>();
+    itemViewModel.setTotalPrice(shopViewModel.voucherNominal ?? 0);
     var jml = itemViewModel.itemCount;
     var total = itemViewModel.totalAmount;
+    var totalPrice = itemViewModel.totalPrice;
     return Stack(children: [
       Container(
-        height: 200,
+        height: 220,
         padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 24),
         decoration: BoxDecoration(
             color: colorGrey,
@@ -59,19 +64,20 @@ class FooterOrder extends StatelessWidget {
                   height: 22,
                   width: 22,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 12,
                 ),
                 Text(
                   'Voucher',
                   style: textSubtitleBoldBlack,
                 ),
-                Spacer(),
-                Text(
-                  'Input Voucher',
-                  style: textSmallGrey,
-                ),
-                SizedBox(
+                const Spacer(),
+                GestureDetector(
+                    onTap: () {
+                      _voucherClick(context);
+                    },
+                    child: _isInputVoucher(shopViewModel)),
+                const SizedBox(
                   width: 8,
                 ),
                 SvgPicture.asset(
@@ -81,7 +87,7 @@ class FooterOrder extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 22,
             ),
           ],
@@ -104,7 +110,7 @@ class FooterOrder extends StatelessWidget {
                   height: 35,
                   width: 35,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 12,
                 ),
                 Column(
@@ -115,12 +121,12 @@ class FooterOrder extends StatelessWidget {
                       style: textSmallGrey,
                     ),
                     Text(
-                      'Rp $total',
+                      'Rp $totalPrice',
                       style: textMediumBlue,
                     ),
                   ],
                 ),
-                Spacer(),
+                const Spacer(),
                 ElevatedButton(
                   onPressed: () {},
                   child: Text(
@@ -128,11 +134,47 @@ class FooterOrder extends StatelessWidget {
                     style: TextStyle(color: colorWhite),
                   ),
                   style: ElevatedButton.styleFrom(
-                      shape: StadiumBorder(), primary: colorGreen),
-                )
+                      shape: const StadiumBorder(), primary: colorGreen),
+                ),
               ],
             )),
       )
     ]);
+  }
+
+  void _voucherClick(BuildContext context) {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return SingleChildScrollView(
+            child: Container(
+              color: colorOpacityMin,
+              height: 250,
+              child: Container(
+                padding: EdgeInsets.all(28),
+                child: InputVoucher(),
+                decoration: BoxDecoration(
+                    color: colorWhite,
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30))),
+              ),
+            ),
+          );
+        });
+  }
+
+  _isInputVoucher(ShopViewModel shopViewModel) {
+    if (shopViewModel.isInputVoucher) {
+      return NominalVoucher(
+          nominal: shopViewModel.voucherNominal ?? 0,
+          kodeVoucher: shopViewModel.kodeVoucher);
+    } else {
+      return Text(
+        'Input Voucher',
+        style: textSmallGrey,
+      );
+    }
   }
 }

@@ -68,6 +68,7 @@ flutter:
     - assets/images/ic_voucher.svg
     - assets/images/ic_next.svg
     - assets/images/ic_basket.svg
+    - assets/images/ic_clear.svg
     # - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

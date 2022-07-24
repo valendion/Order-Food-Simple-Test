@@ -1,47 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:test_flutter/models/item_counter.dart';
+import 'package:test_flutter/view_model/shop_view_model.dart';
 
 class ItemViewModel extends ChangeNotifier {
-  // int _countItem = 0;
-  // int _countPrice = 0;
-
-  // List<ItemCounter> _items = [];
-
-  // int get countItem => _countItem;
-  // int get countPrice => _countPrice;
-
-  // List<ItemCounter> get items => _items;
-
-  // setItems(ItemCounter itemCounter) {
-  //   _items.add(itemCounter);
-  // }
-
-  // // setCountItem(){
-  // //   var filteredList
-  // //   _items
-  // // }
-
-  // setCountItemIncrement(int price) {
-  //   _countItem++;
-  //   _countPrice += price;
-  //   notifyListeners();
-  // }
-
-  // setCountItemDecrement(int price) {
-  //   if (_countItem == 0) {
-  //     _countItem = 0;
-  //   } else {
-  //     _countItem--;
-  //   }
-
-  //   if (_countPrice == 0) {
-  //     _countPrice = 0;
-  //   } else {
-  //     _countPrice -= price;
-  //   }
-  //   notifyListeners();
-  // }
-
   Map<int, ItemCounter> _cartItem = {};
 
   Map<int, ItemCounter> get cartItem {
@@ -50,6 +11,14 @@ class ItemViewModel extends ChangeNotifier {
 
   int get itemCount {
     return _cartItem.length;
+  }
+
+  int _totalPrice = 0;
+
+  int get totalPrice => (_totalPrice <= 0) ? 0 : _totalPrice;
+
+  setTotalPrice(int nominal) {
+    _totalPrice = totalAmount - nominal;
   }
 
   void reduceItem(ItemCounter itemCounter) {

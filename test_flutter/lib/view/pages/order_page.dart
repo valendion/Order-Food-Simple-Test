@@ -4,7 +4,6 @@ import 'package:test_flutter/view/widget/app_loading.dart';
 import 'package:test_flutter/view/widget/footer_order.dart';
 import 'package:test_flutter/view/widget/item_order.dart';
 import 'package:test_flutter/view_model/shop_view_model.dart';
-
 import '../../view_model/item_view_model.dart';
 
 class OrderPage extends StatelessWidget {
@@ -32,7 +31,7 @@ class OrderPage extends StatelessWidget {
   _ui(ShopViewModel shopViewModel, ItemViewModel itemViewModel) {
     var dataMenus = shopViewModel.dataMenu.datas;
     if (shopViewModel.isLoading) {
-      return AppLoading();
+      return const AppLoading();
     }
     return ListView.builder(
         itemCount: dataMenus.length,

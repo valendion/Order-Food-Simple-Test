@@ -66,9 +66,9 @@ class ItemOrder extends StatelessWidget {
                     const SizedBox(
                       width: 6,
                     ),
-                    const Text('Tambahkan Catatan')
+                    const Text('Tambahkan Catatan'),
                   ],
-                )
+                ),
               ],
             ),
             Spacer(),
@@ -76,7 +76,6 @@ class ItemOrder extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: (() {
-                    // itemViewModel.setCountItemIncrement(int.parse(harga));
                     itemViewModel.addItem(ItemCounter(
                         id: id,
                         name: nama,
@@ -93,7 +92,6 @@ class ItemOrder extends StatelessWidget {
                   width: 12,
                 ),
                 Text(
-                  // itemViewModel.countItem.toString(),
                   (itemViewModel.cartItem[id]?.quantity ?? 0).toString(),
                   style: textTitleItemBlack,
                 ),
@@ -102,7 +100,6 @@ class ItemOrder extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // itemViewModel.setCountItemDecrement(int.parse(harga));
                     itemViewModel.reduceItem(ItemCounter(
                         id: id,
                         name: nama,
