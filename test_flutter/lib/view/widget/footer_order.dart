@@ -128,18 +128,35 @@ class FooterOrder extends StatelessWidget {
                 ),
                 const Spacer(),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    var isOrdered = shopViewModel.isOrdered;
+                    if (isOrdered) {
+                      shopViewModel.setOrdered(false);
+                    } else {
+                      itemViewModel.setIdOrdered();
+                      shopViewModel.setOrdered(true);
+                    }
+
+                    debugPrint(isOrdered.toString());
+                    debugPrint(itemViewModel.idOrdereds.toString());
+                  },
                   child: Text(
-                    'Pesan Sekarang',
+                    _buttonOrdered(shopViewModel.isOrdered),
                     style: TextStyle(color: colorWhite),
                   ),
                   style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(), primary: colorGreen),
+                      fixedSize: Size(170, 42),
+                      shape: const StadiumBorder(),
+                      primary: colorGreen),
                 ),
               ],
             )),
       )
     ]);
+  }
+
+  String _buttonOrdered(bool isButtonOrdered) {
+    return (isButtonOrdered) ? 'Batalkan' : 'Pesan Sekarang';
   }
 
   void _voucherClick(BuildContext context) {

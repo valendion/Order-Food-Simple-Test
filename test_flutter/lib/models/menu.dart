@@ -4,6 +4,7 @@ class Menu {
   final int harga;
   final String tipe;
   final String gambar;
+  bool? isOrdered = false;
 
   Menu(
       {required this.id,

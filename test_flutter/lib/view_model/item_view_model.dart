@@ -3,15 +3,19 @@ import 'package:test_flutter/models/item_counter.dart';
 import 'package:test_flutter/view_model/shop_view_model.dart';
 
 class ItemViewModel extends ChangeNotifier {
-  Map<int, ItemCounter> _cartItem = {};
+  final Map<int, ItemCounter> _cartItem = {};
 
   Map<int, ItemCounter> get cartItem {
     return {..._cartItem};
   }
 
+  final Set<int> _idOrdereds = {};
+
   int get itemCount {
     return _cartItem.length;
   }
+
+  Set<int> get idOrdereds => _idOrdereds;
 
   int _totalPrice = 0;
 
@@ -21,9 +25,22 @@ class ItemViewModel extends ChangeNotifier {
     _totalPrice = totalAmount - nominal;
   }
 
+  setIdOrdered() {
+    cartItem.forEach((key, value) {
+      _idOrdereds.add(value.id);
+    });
+    notifyListeners();
+  }
+
+  setIdDeleteOrdered(int id) {
+    _idOrdereds.removeWhere((element) => element == id);
+    notifyListeners();
+  }
+
   void reduceItem(ItemCounter itemCounter) {
     if (itemCounter.quantity == 1) {
       _cartItem.remove(itemCounter.id);
+      setIdDeleteOrdered(itemCounter.id);
       notifyListeners();
     } else if (itemCounter.quantity == 0) {
       return;
@@ -37,6 +54,7 @@ class ItemViewModel extends ChangeNotifier {
           quantity: itemCounter.quantity - 1,
         ),
       );
+      setIdOrdered();
       notifyListeners();
     }
   }
@@ -55,6 +73,7 @@ class ItemViewModel extends ChangeNotifier {
     } else {
       addToCart(itemCounter);
     }
+    setIdOrdered();
     notifyListeners();
   }
 

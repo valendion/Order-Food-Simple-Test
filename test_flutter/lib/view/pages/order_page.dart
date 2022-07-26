@@ -15,17 +15,16 @@ class OrderPage extends StatelessWidget {
     ItemViewModel itemViewModel = context.watch<ItemViewModel>();
 
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: _ui(shopViewModel, itemViewModel),
-            ),
-            FooterOrder()
-          ],
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: _ui(shopViewModel, itemViewModel),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+        bottomNavigationBar: FooterOrder());
   }
 
   _ui(ShopViewModel shopViewModel, ItemViewModel itemViewModel) {
@@ -34,6 +33,7 @@ class OrderPage extends StatelessWidget {
       return const AppLoading();
     }
     return ListView.builder(
+        shrinkWrap: true,
         itemCount: dataMenus.length,
         itemBuilder: (context, index) {
           return ItemOrder(

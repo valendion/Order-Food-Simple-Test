@@ -10,7 +10,6 @@ class ShopService {
   static Future<ResponseMenus> getMenus() async {
     final response = await http.get(Uri.parse(BASE_URL + MENU_ENDPOINT));
 
-    debugPrint(response.body.toString());
     if (response.statusCode == SUCCESS) {
       return ResponseMenus.fromJson(jsonDecode(response.body));
     } else {
@@ -20,8 +19,6 @@ class ShopService {
 
   static Future<ResponseVoucher> postVoucher(String kode) async {
     final response = await http.get(Uri.parse(BASE_URL + VOUCHER + kode));
-
-    debugPrint(response.body.toString());
 
     if (response.statusCode == SUCCESS) {
       return ResponseVoucher.fromJson(jsonDecode(response.body));

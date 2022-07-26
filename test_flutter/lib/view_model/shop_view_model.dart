@@ -8,6 +8,8 @@ class ShopViewModel extends ChangeNotifier {
 
   bool _isInputVoucher = false;
 
+  bool _isOrdered = false;
+
   int _voucherNominal = 0;
 
   String _kodeVoucher = '';
@@ -19,6 +21,7 @@ class ShopViewModel extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
   bool get isInputVoucher => _isInputVoucher;
+  bool get isOrdered => _isOrdered;
   String get kodeVoucher => _kodeVoucher;
   int? get voucherNominal => _voucherNominal;
 
@@ -59,6 +62,11 @@ class ShopViewModel extends ChangeNotifier {
 
   _setkodeVoucher(String kodeVoucher) {
     _kodeVoucher = kodeVoucher;
+    notifyListeners();
+  }
+
+  setOrdered(bool isOrdered) {
+    _isOrdered = isOrdered;
     notifyListeners();
   }
 

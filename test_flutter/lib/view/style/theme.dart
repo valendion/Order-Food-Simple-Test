@@ -12,6 +12,9 @@ Color colorOpacityMin = const Color(0xFF737373);
 TextStyle textTitleItemBlack =
     TextStyle(fontSize: 23, color: colorBlack, fontWeight: FontWeight.bold);
 
+TextStyle textTitleItemBlue =
+    TextStyle(fontSize: 23, color: colorBlue, fontWeight: FontWeight.bold);
+
 TextStyle textSubTitleItemBlue = TextStyle(fontSize: 18, color: colorBlue);
 
 TextStyle textSubtitleBoldBlack =
