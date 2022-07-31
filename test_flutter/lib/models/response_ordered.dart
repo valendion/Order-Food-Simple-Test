@@ -17,11 +17,11 @@ class ResponseOrdered {
         })));
   }
 
-  Map<String, dynamic> json() {
+  Map<String, dynamic> toJson() {
     return {
-      'nominal_diskon': this.nominalDiskon,
-      'nominal_pesanan': this.nominalPesanan,
-      'items': this.items
+      'nominal_diskon': nominalDiskon,
+      'nominal_pesanan': nominalPesanan,
+      'items': items
     };
   }
 }
@@ -47,6 +47,10 @@ class Items {
   // }
 
   Map<String, dynamic> toJson() {
-    return {'id': this.id, 'harga': this.harga, 'catatan': this.catatan};
+    return {
+      'id': this.id,
+      'harga': this.harga,
+      'catatan': this.catatan.toString()
+    };
   }
 }

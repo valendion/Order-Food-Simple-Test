@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:test_flutter/models/response_ordered.dart';
 import 'package:test_flutter/view/style/theme.dart';
 import 'package:test_flutter/view/widget/input_voucher.dart';
 import 'package:test_flutter/view/widget/nominal_voucher.dart';
@@ -10,6 +14,19 @@ import '../../view_model/item_view_model.dart';
 class FooterOrder extends StatelessWidget {
   const FooterOrder({Key? key}) : super(key: key);
 
+  _showMessage(String message) {
+    if (message.isNotEmpty) {
+      Fluttertoast.showToast(
+          msg: message,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: colorWhite,
+          textColor: colorBlue,
+          fontSize: 16.0);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ItemViewModel itemViewModel = context.watch<ItemViewModel>();
@@ -18,6 +35,8 @@ class FooterOrder extends StatelessWidget {
     var jml = itemViewModel.itemCount;
     var total = itemViewModel.totalAmount;
     var totalPrice = itemViewModel.totalPrice;
+    // _showMessage(shopViewModel.statusMessage.message);
+    // _showMessage(shopViewModel.statusCancel.message);
     return Stack(children: [
       Container(
         height: 220,
@@ -128,17 +147,33 @@ class FooterOrder extends StatelessWidget {
                 ),
                 const Spacer(),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     var isOrdered = shopViewModel.isOrdered;
                     if (isOrdered) {
-                      shopViewModel.setOrdered(false);
+                      _uiAlerDialog(context, shopViewModel, itemViewModel);
                     } else {
-                      itemViewModel.setIdOrdered();
                       shopViewModel.setOrdered(true);
-                    }
 
-                    debugPrint(isOrdered.toString());
-                    debugPrint(itemViewModel.idOrdereds.toString());
+                      List<Items> items = [];
+                      itemViewModel.cartItem.forEach((key, value) {
+                        items.add(Items(
+                            id: value.id,
+                            harga: value.price,
+                            catatan: value.note ?? ''));
+                      });
+
+                      var responseOrder = ResponseOrdered(
+                          nominalDiskon:
+                              shopViewModel.voucherNominal.toString(),
+                          nominalPesanan: totalPrice.toString(),
+                          items: items);
+
+                      shopViewModel.postOrder(responseOrder);
+
+                      await Future.delayed(Duration(milliseconds: 1000));
+
+                      _showMessage(shopViewModel.statusMessage.message);
+                    }
                   },
                   child: Text(
                     _buttonOrdered(shopViewModel.isOrdered),
@@ -157,6 +192,52 @@ class FooterOrder extends StatelessWidget {
 
   String _buttonOrdered(bool isButtonOrdered) {
     return (isButtonOrdered) ? 'Batalkan' : 'Pesan Sekarang';
+  }
+
+  _uiAlerDialog(BuildContext context, ShopViewModel shopViewModel,
+      ItemViewModel itemViewModel) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Apakah Anda yakin ingin membatalkan pesanan ini ?'),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+            actions: [
+              ElevatedButton(
+                  onPressed: () async {
+                    shopViewModel.setOrdered(false);
+                    shopViewModel.cancelOrder();
+
+                    itemViewModel.deleteItemCard();
+                    shopViewModel.setIsInputVoucher(false);
+                    await Future.delayed(Duration(milliseconds: 500));
+                    _showMessage(shopViewModel.statusCancel.message);
+                    Navigator.pop(context, false);
+                  },
+                  child: Text(
+                    'Yakin',
+                    style: TextStyle(color: colorWhite),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      fixedSize: Size(120, 42),
+                      shape: const StadiumBorder(),
+                      primary: colorGreen)),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context, false);
+                  },
+                  child: Text(
+                    'Batal',
+                    style: TextStyle(color: colorWhite),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      fixedSize: Size(120, 42),
+                      shape: const StadiumBorder(),
+                      primary: colorGreen)),
+            ],
+          );
+        });
   }
 
   void _voucherClick(BuildContext context) {

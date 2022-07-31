@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:test_flutter/view/widget/app_loading.dart';
 import 'package:test_flutter/view/widget/footer_order.dart';
@@ -29,6 +30,7 @@ class OrderPage extends StatelessWidget {
 
   _ui(ShopViewModel shopViewModel, ItemViewModel itemViewModel) {
     var dataMenus = shopViewModel.dataMenu.datas;
+
     if (shopViewModel.isLoading) {
       return const AppLoading();
     }

@@ -64,11 +64,11 @@ class ItemViewModel extends ChangeNotifier {
       //add quantity
       _cartItem.update(itemCounter.id, (existingCartItem) {
         return ItemCounter(
-          id: existingCartItem.id,
-          name: existingCartItem.name,
-          price: existingCartItem.price,
-          quantity: existingCartItem.quantity + 1,
-        );
+            id: existingCartItem.id,
+            name: existingCartItem.name,
+            price: existingCartItem.price,
+            quantity: existingCartItem.quantity + 1,
+            note: existingCartItem.note);
       });
     } else {
       addToCart(itemCounter);
@@ -101,6 +101,20 @@ class ItemViewModel extends ChangeNotifier {
 
   void removeItem(int id) {
     _cartItem.remove(id);
+    notifyListeners();
+  }
+
+  void addNote(String note, int id) {
+    cartItem[id]?.note = note;
+  }
+
+  String? getNote(int id) {
+    return cartItem[id]?.note;
+  }
+
+  deleteItemCard() {
+    _cartItem.clear();
+    _idOrdereds.clear();
     notifyListeners();
   }
 }

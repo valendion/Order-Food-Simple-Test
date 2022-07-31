@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:test_flutter/models/response_menus.dart';
+import 'package:test_flutter/models/response_ordered.dart';
+import 'package:test_flutter/models/response_status_cancel.dart';
+import 'package:test_flutter/models/response_status_ordered.dart';
 import 'package:test_flutter/models/response_voucher.dart';
 import 'package:test_flutter/view_model/network/shop_service.dart';
 
@@ -19,6 +22,12 @@ class ShopViewModel extends ChangeNotifier {
   ResponseVoucher _voucher = ResponseVoucher(
       statusCode: 0, datas: Voucher(id: 0, kode: '', nominal: 0));
 
+  ResponseStatusOrdered _statusMessage =
+      ResponseStatusOrdered(message: '', statusCode: 0, id: 0);
+
+  ResponseStatusCancel _statusCancel =
+      ResponseStatusCancel(message: '', statusCode: 0);
+
   bool get isLoading => _isLoading;
   bool get isInputVoucher => _isInputVoucher;
   bool get isOrdered => _isOrdered;
@@ -27,6 +36,8 @@ class ShopViewModel extends ChangeNotifier {
 
   ResponseMenus get dataMenu => _menu;
   ResponseVoucher get dataVoucher => _voucher;
+  ResponseStatusOrdered get statusMessage => _statusMessage;
+  ResponseStatusCancel get statusCancel => _statusCancel;
 
   ShopViewModel() {
     getMenus();
@@ -37,7 +48,7 @@ class ShopViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  _setIsInputVoucher(bool isInputVouhcer) {
+  setIsInputVoucher(bool isInputVouhcer) {
     _isInputVoucher = isInputVouhcer;
     notifyListeners();
   }
@@ -51,7 +62,7 @@ class ShopViewModel extends ChangeNotifier {
     _voucher = responseVoucher;
     _setVoucherNominal(responseVoucher.datas.nominal);
     _setkodeVoucher(responseVoucher.datas.kode);
-    _setIsInputVoucher(true);
+    setIsInputVoucher(true);
     notifyListeners();
   }
 
@@ -70,6 +81,16 @@ class ShopViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  _setStatusMessage(ResponseStatusOrdered statusMessage) {
+    _statusMessage = statusMessage;
+    notifyListeners();
+  }
+
+  _setStatusCancel(ResponseStatusCancel statusCancel) {
+    _statusCancel = statusCancel;
+    notifyListeners();
+  }
+
   void getMenus() async {
     _setIsLoading(true);
 
@@ -81,11 +102,31 @@ class ShopViewModel extends ChangeNotifier {
   }
 
   void getVoucher(String kode) async {
-    _setIsLoading(true);
+    // _setIsLoading(true);
 
     ResponseVoucher response = await ShopService.postVoucher(kode);
-
     _setDataVoucher(response);
+    // _setIsLoading(false);
+  }
+
+  void postOrder(ResponseOrdered ordered) async {
+    // await ShopService.postItemOrdered(ordered).then((value) {
+    //   return _setStatusMessage(value);
+    // });
+    ResponseStatusOrdered response = await ShopService.postItemOrdered(ordered);
+    _setStatusMessage(response);
+  }
+
+  void cancelOrder() async {
+    // await ShopService.cancelOrder(statusMessage.id).then((value) {
+    //   return _setStatusCancel(value);
+    // });
+
+    _setIsLoading(true);
+
+    ResponseStatusCancel response =
+        await ShopService.cancelOrder(statusMessage.id);
+    _setStatusCancel(response);
 
     _setIsLoading(false);
   }

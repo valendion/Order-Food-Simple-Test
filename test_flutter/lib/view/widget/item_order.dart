@@ -24,12 +24,10 @@ class ItemOrder extends StatelessWidget {
   Widget build(BuildContext context) {
     ItemViewModel itemViewModel = context.watch<ItemViewModel>();
     ShopViewModel shopViewModel = context.watch<ShopViewModel>();
-    // return (shopViewModel.isOrdered) ? _cardUi(itemViewModel, shopViewModel)
+
     if (!shopViewModel.isOrdered) {
       return _cardUi(itemViewModel, shopViewModel);
     } else {
-      debugPrint(
-          'idOrdered :' + itemViewModel.idOrdereds.contains(id).toString());
       return (!itemViewModel.idOrdereds.contains(id))
           ? Opacity(opacity: 0.5, child: _cardUi(itemViewModel, shopViewModel))
           : _cardUi(itemViewModel, shopViewModel);
@@ -37,6 +35,7 @@ class ItemOrder extends StatelessWidget {
   }
 
   _cardUi(ItemViewModel itemViewModel, ShopViewModel shopViewModel) {
+    var textInputNote = TextEditingController();
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8),
@@ -85,6 +84,18 @@ class ItemOrder extends StatelessWidget {
                       height: 14,
                       width: 150,
                       child: TextField(
+                        // controller: textInputNote,
+                        // onChanged: (value) {
+                        //   itemViewModel.addNote(value, id);
+                        // },
+
+                        // onSubmitted: (value) {
+                        //   itemViewModel.addNote(value, id);
+                        // },
+                        onChanged: (value) {
+                          // textInputNote.text = itemViewModel.getNote(id) ?? '';
+                          itemViewModel.addNote(value, id);
+                        },
                         decoration: InputDecoration(
                             hintStyle: textSmallGrey,
                             hintText: 'Tambahkan Catatan'),
